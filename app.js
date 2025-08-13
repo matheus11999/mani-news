@@ -75,9 +75,7 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 logger.info('Using memory session store (will upgrade to MongoDB when available)');
 
-// View engine setup
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'src/views'));
+// Remove EJS view engine setup - now using React
 
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));
@@ -97,103 +95,86 @@ app.use((req, res, next) => {
   next();
 });
 
-// Routes
-app.get('/', async (req, res) => {
+// API Routes
+app.get('/api/posts', async (req, res) => {
   try {
-    // Check if database is connected
     if (!database.isConnected) {
-      logger.warn('Database not connected, rendering demo page');
-      return res.render('layouts/main', {
-        page: 'demo',
-        title: 'Mani News - Portal de Notícias',
-        metaDescription: 'Mani News - Seu portal de notícias moderno e responsivo. PWA funcionando perfeitamente!',
-        dbStatus: 'disconnected'
-      });
+      return res.json([]);
     }
 
-    const { Post, Category } = require('./src/models');
+    const { Post } = require('./src/models');
+    const posts = await Post.getPublished()
+      .populate('category', 'name slug')
+      .populate('author', 'name avatar')
+      .limit(20)
+      .sort({ publishedAt: -1 });
     
-    // Get featured posts
-    const featuredPosts = await Post.getFeatured(5);
-    
-    // Get latest posts
-    const latestPosts = await Post.getPublished().limit(10);
-    
-    // Get categories for menu
-    const categories = await Category.getMenuCategories();
-    
-    res.render('layouts/main', {
-      page: 'home',
-      title: 'Início',
-      featuredPosts,
-      latestPosts,
-      categories,
-      metaDescription: 'Mani News - Seu portal de notícias atualizado com as principais informações do Brasil e do mundo.',
-      dbStatus: 'connected'
-    });
+    res.json(posts);
   } catch (error) {
-    logger.error('Error loading homepage:', error);
-    res.status(500).render('pages/error', {
-      title: 'Erro',
-      message: 'Erro interno do servidor',
-      error: process.env.NODE_ENV === 'development' ? error : {}
-    });
+    logger.error('Error fetching posts:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-app.get('/noticia/:slug', async (req, res) => {
+app.get('/api/posts/:slug', async (req, res) => {
   try {
+    if (!database.isConnected) {
+      return res.status(404).json({ error: 'Post not found' });
+    }
+
     const { Post } = require('./src/models');
-    
     const post = await Post.findOne({ 
       slug: req.params.slug, 
       status: 'published' 
     })
-      .populate('category', 'name slug color')
-      .populate('author', 'name bio avatar social');
+      .populate('category', 'name slug')
+      .populate('author', 'name bio avatar');
     
     if (!post) {
-      return res.status(404).render('pages/error', {
-        title: 'Página não encontrada',
-        message: 'A notícia que você procura não foi encontrada.',
-        error: {}
-      });
+      return res.status(404).json({ error: 'Post not found' });
     }
     
     // Increment views
     await post.incrementViews();
     
-    // Get related posts
-    const relatedPosts = await Post.find({
-      category: post.category._id,
-      _id: { $ne: post._id },
-      status: 'published'
-    })
-      .populate('category', 'name slug color')
-      .populate('author', 'name avatar')
-      .limit(4)
-      .sort({ publishedAt: -1 });
-    
-    res.render('layouts/main', {
-      page: 'post',
-      title: post.title,
-      post,
-      relatedPosts,
-      metaTitle: post.metaTitle || post.title,
-      metaDescription: post.metaDescription || post.excerpt
-    });
+    res.json(post);
   } catch (error) {
-    logger.error('Error loading post:', error);
-    res.status(500).render('pages/error', {
-      title: 'Erro',
-      message: 'Erro interno do servidor',
-      error: process.env.NODE_ENV === 'development' ? error : {}
-    });
+    logger.error('Error fetching post:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-app.get('/categoria/:slug', async (req, res) => {
+app.get('/api/categories', async (req, res) => {
   try {
+    if (!database.isConnected) {
+      // Return default categories for demo
+      return res.json([
+        { name: 'Política', slug: 'politica' },
+        { name: 'Economia', slug: 'economia' },
+        { name: 'Esportes', slug: 'esportes' },
+        { name: 'Tecnologia', slug: 'tecnologia' },
+        { name: 'Mundo', slug: 'mundo' },
+        { name: 'Cultura', slug: 'cultura' },
+        { name: 'Saúde', slug: 'saude' },
+        { name: 'Educação', slug: 'educacao' }
+      ]);
+    }
+
+    const { Category } = require('./src/models');
+    const categories = await Category.getMenuCategories();
+    res.json(categories);
+  } catch (error) {
+    logger.error('Error fetching categories:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/api/categoria/:slug', async (req, res) => {
+  try {
+    if (!database.isConnected) {
+      return res.status(404).json({ error: 'Category not found' });
+    }
+
     const { Category, Post } = require('./src/models');
     
     const category = await Category.findOne({ 
@@ -202,11 +183,7 @@ app.get('/categoria/:slug', async (req, res) => {
     });
     
     if (!category) {
-      return res.status(404).render('pages/error', {
-        title: 'Categoria não encontrada',
-        message: 'A categoria que você procura não foi encontrada.',
-        error: {}
-      });
+      return res.status(404).json({ error: 'Category not found' });
     }
     
     const page = parseInt(req.query.page) || 1;
@@ -217,7 +194,7 @@ app.get('/categoria/:slug', async (req, res) => {
       category: category._id, 
       status: 'published' 
     })
-      .populate('category', 'name slug color')
+      .populate('category', 'name slug')
       .populate('author', 'name avatar')
       .sort({ publishedAt: -1 })
       .limit(limit)
@@ -230,9 +207,7 @@ app.get('/categoria/:slug', async (req, res) => {
     
     const totalPages = Math.ceil(totalPosts / limit);
     
-    res.render('layouts/main', {
-      page: 'category',
-      title: category.name,
+    res.json({
       category,
       posts,
       pagination: {
@@ -240,74 +215,36 @@ app.get('/categoria/:slug', async (req, res) => {
         total: totalPages,
         hasNext: page < totalPages,
         hasPrev: page > 1
-      },
-      metaDescription: category.description || `Notícias de ${category.name}`
+      }
     });
   } catch (error) {
-    logger.error('Error loading category:', error);
-    res.status(500).render('pages/error', {
-      title: 'Erro',
-      message: 'Erro interno do servidor',
-      error: process.env.NODE_ENV === 'development' ? error : {}
-    });
+    logger.error('Error fetching category:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-app.get('/buscar', async (req, res) => {
+app.get('/api/search', async (req, res) => {
   try {
-    const { Post } = require('./src/models');
     const query = req.query.q || '';
     
     if (!query.trim()) {
-      return res.render('layouts/main', {
-        page: 'search',
-        title: 'Buscar',
-        query: '',
-        posts: [],
-        totalResults: 0
-      });
+      return res.json([]);
+    }
+
+    if (!database.isConnected) {
+      return res.json([]);
     }
     
+    const { Post } = require('./src/models');
     const posts = await Post.search(query)
-      .populate('category', 'name slug color')
+      .populate('category', 'name slug')
       .populate('author', 'name avatar')
       .limit(20);
     
-    res.render('layouts/main', {
-      page: 'search',
-      title: `Buscar: ${query}`,
-      query,
-      posts,
-      totalResults: posts.length,
-      metaDescription: `Resultados da busca para: ${query}`
-    });
+    res.json(posts);
   } catch (error) {
     logger.error('Error in search:', error);
-    res.status(500).render('pages/error', {
-      title: 'Erro',
-      message: 'Erro interno do servidor',
-      error: process.env.NODE_ENV === 'development' ? error : {}
-    });
-  }
-});
-
-// Dashboard route
-app.get('/dashboard', (req, res) => {
-  try {
-    res.render('layouts/main', {
-      page: 'dashboard',
-      title: 'Dashboard Admin - Mani News',
-      metaDescription: 'Dashboard administrativo do Mani News',
-      dbStatus: database.isConnected ? 'connected' : 'disconnected'
-    });
-  } catch (error) {
-    logger.error('Error loading dashboard:', error);
-    res.status(500).render('layouts/main', {
-      page: 'error',
-      title: 'Erro',
-      message: 'Erro interno do servidor',
-      error: process.env.NODE_ENV === 'development' ? error : {}
-    });
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
