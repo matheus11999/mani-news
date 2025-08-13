@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const winston = require('winston');
+const { validateAndFixMongoUri, createFallbackUri } = require('./mongoUri');
 
 const logger = winston.createLogger({
   level: 'info',
@@ -26,7 +27,17 @@ class Database {
   }
 
   async connect() {
-    const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/maninews';
+    let mongoUri;
+    
+    try {
+      mongoUri = validateAndFixMongoUri(
+        process.env.MONGODB_URI || createFallbackUri()
+      );
+    } catch (error) {
+      logger.error('MongoDB URI validation failed:', error.message);
+      logger.warn('Using fallback URI for development');
+      mongoUri = createFallbackUri();
+    }
     
     const options = {
       maxPoolSize: 10,

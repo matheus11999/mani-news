@@ -8,6 +8,7 @@ const { body, validationResult } = require('express-validator');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const logger = require('./src/utils/logger');
+const { validateAndFixMongoUri, createFallbackUri } = require('./src/utils/mongoUri');
 const { generalLimiter, generateCSRFToken, xssProtection } = require('./src/middleware/security');
 
 const database = require('./src/utils/database');
@@ -48,12 +49,23 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Session configuration
+let sessionMongoUri;
+try {
+  sessionMongoUri = validateAndFixMongoUri(
+    process.env.MONGODB_URI || createFallbackUri()
+  );
+} catch (error) {
+  logger.error('Session MongoDB URI validation failed:', error.message);
+  sessionMongoUri = createFallbackUri();
+}
+
 app.use(session({
   secret: process.env.SESSION_SECRET || 'fallback-secret-key',
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost:27017/maninews'
+    mongoUrl: sessionMongoUri,
+    touchAfter: 24 * 3600 // lazy session update
   }),
   cookie: {
     secure: process.env.NODE_ENV === 'production',
