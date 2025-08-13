@@ -291,6 +291,26 @@ app.get('/buscar', async (req, res) => {
   }
 });
 
+// Dashboard route
+app.get('/dashboard', (req, res) => {
+  try {
+    res.render('layouts/main', {
+      page: 'dashboard',
+      title: 'Dashboard Admin - Mani News',
+      metaDescription: 'Dashboard administrativo do Mani News',
+      dbStatus: database.isConnected ? 'connected' : 'disconnected'
+    });
+  } catch (error) {
+    logger.error('Error loading dashboard:', error);
+    res.status(500).render('layouts/main', {
+      page: 'error',
+      title: 'Erro',
+      message: 'Erro interno do servidor',
+      error: process.env.NODE_ENV === 'development' ? error : {}
+    });
+  }
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   try {
@@ -315,7 +335,8 @@ app.get('/health', (req, res) => {
 
 // 404 handler
 app.use((req, res) => {
-  res.status(404).render('pages/error', {
+  res.status(404).render('layouts/main', {
+    page: 'error',
     title: 'Página não encontrada',
     message: 'A página que você procura não existe.',
     error: {}
@@ -325,7 +346,8 @@ app.use((req, res) => {
 // Error handler
 app.use((error, req, res, next) => {
   logger.error('Unhandled error:', error);
-  res.status(error.status || 500).render('pages/error', {
+  res.status(error.status || 500).render('layouts/main', {
+    page: 'error',
     title: 'Erro',
     message: error.message || 'Erro interno do servidor',
     error: process.env.NODE_ENV === 'development' ? error : {}
