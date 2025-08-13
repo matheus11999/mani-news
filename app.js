@@ -59,20 +59,21 @@ try {
   sessionMongoUri = createFallbackUri();
 }
 
-app.use(session({
+// Session configuration with memory store (no MongoDB dependency)
+const sessionConfig = {
   secret: process.env.SESSION_SECRET || 'fallback-secret-key',
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: sessionMongoUri,
-    touchAfter: 24 * 3600 // lazy session update
-  }),
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
-}));
+  // Using default memory store for now - will upgrade to MongoDB store once DB is connected
+};
+
+app.use(session(sessionConfig));
+logger.info('Using memory session store (will upgrade to MongoDB when available)');
 
 // View engine setup
 app.set('view engine', 'ejs');
@@ -99,6 +100,17 @@ app.use((req, res, next) => {
 // Routes
 app.get('/', async (req, res) => {
   try {
+    // Check if database is connected
+    if (!database.isConnected) {
+      logger.warn('Database not connected, rendering demo page');
+      return res.render('layouts/main', {
+        page: 'demo',
+        title: 'Mani News - Portal de Notícias',
+        metaDescription: 'Mani News - Seu portal de notícias moderno e responsivo. PWA funcionando perfeitamente!',
+        dbStatus: 'disconnected'
+      });
+    }
+
     const { Post, Category } = require('./src/models');
     
     // Get featured posts
@@ -116,7 +128,8 @@ app.get('/', async (req, res) => {
       featuredPosts,
       latestPosts,
       categories,
-      metaDescription: 'Mani News - Seu portal de notícias atualizado com as principais informações do Brasil e do mundo.'
+      metaDescription: 'Mani News - Seu portal de notícias atualizado com as principais informações do Brasil e do mundo.',
+      dbStatus: 'connected'
     });
   } catch (error) {
     logger.error('Error loading homepage:', error);

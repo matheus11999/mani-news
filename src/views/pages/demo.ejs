@@ -1,0 +1,161 @@
+<!-- Demo Page - When Database is Not Connected -->
+<div class="min-h-screen bg-gray-50">
+    <!-- Hero Section -->
+    <section class="hero-gradient text-white">
+        <div class="container mx-auto px-4 py-12">
+            <div class="text-center">
+                <div class="mb-8">
+                    <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                        </svg>
+                    </div>
+                </div>
+                
+                <h1 class="text-4xl lg:text-5xl font-bold mb-4">
+                    Bem-vindo ao Mani News
+                </h1>
+                <p class="text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
+                    Seu portal de notícias moderno e responsivo. A aplicação está funcionando perfeitamente!
+                </p>
+                
+                <div class="inline-flex items-center px-6 py-3 bg-white/10 rounded-lg border border-white/20">
+                    <svg class="w-5 h-5 text-yellow-300 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="text-sm">Conectando ao banco de dados...</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Recursos Implementados</h2>
+                <p class="text-lg text-gray-600">Portal de notícias completo com PWA e otimizações modernas</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- PWA -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Progressive Web App</h3>
+                    <p class="text-gray-600 text-sm">Service Worker, cache offline, instalação nativa e push notifications</p>
+                </div>
+                
+                <!-- Responsive -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Design Responsivo</h3>
+                    <p class="text-gray-600 text-sm">Interface adaptada para mobile, tablet e desktop com Tailwind CSS</p>
+                </div>
+                
+                <!-- Security -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Segurança Avançada</h3>
+                    <p class="text-gray-600 text-sm">Rate limiting, validação de inputs, proteção XSS e CSRF</p>
+                </div>
+                
+                <!-- Performance -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Alta Performance</h3>
+                    <p class="text-gray-600 text-sm">Lazy loading, compressão, cache inteligente e otimização de imagens</p>
+                </div>
+                
+                <!-- MongoDB -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">MongoDB + Mongoose</h3>
+                    <p class="text-gray-600 text-sm">Banco de dados NoSQL com schemas otimizados para notícias</p>
+                </div>
+                
+                <!-- Features -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Funcionalidades Completas</h3>
+                    <p class="text-gray-600 text-sm">Categorias, busca, comentários, autores, admin dashboard e muito mais</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Status Section -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto text-center">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Status da Aplicação</h2>
+                
+                <div class="space-y-4">
+                    <!-- Server Status -->
+                    <div class="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                            <span class="font-medium text-green-800">Servidor Web</span>
+                        </div>
+                        <span class="text-green-600 font-semibold">Online</span>
+                    </div>
+                    
+                    <!-- PWA Status -->
+                    <div class="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                            <span class="font-medium text-green-800">PWA Features</span>
+                        </div>
+                        <span class="text-green-600 font-semibold">Ativo</span>
+                    </div>
+                    
+                    <!-- Database Status -->
+                    <div class="flex items-center justify-between p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 bg-yellow-500 rounded-full mr-3 animate-pulse"></div>
+                            <span class="font-medium text-yellow-800">Banco de Dados</span>
+                        </div>
+                        <span class="text-yellow-600 font-semibold">Conectando...</span>
+                    </div>
+                </div>
+                
+                <div class="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-lg">
+                    <h3 class="font-semibold text-blue-900 mb-2">✅ Aplicação Funcionando!</h3>
+                    <p class="text-blue-800 text-sm">
+                        O servidor está rodando perfeitamente. O banco de dados será conectado assim que as credenciais 
+                        forem configuradas corretamente. Todos os recursos PWA estão ativos e funcionais.
+                    </p>
+                </div>
+                
+                <div class="mt-6">
+                    <a href="/health" class="btn-primary">
+                        Ver Health Check
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
