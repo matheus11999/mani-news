@@ -180,15 +180,22 @@ O projeto cria automaticamente:
 
 ## 🚀 Deploy
 
+### Buildpack Deployment (Heroku/EasyPanel)
+O projeto inclui os arquivos necessários para deploy com buildpacks:
+- `Procfile` - Define o comando de start
+- `package.json` - Com engines especificados
+- `.npmrc` - Configurações NPM
+
 ### Variáveis de Ambiente para Produção
 ```env
 NODE_ENV=production
-MONGODB_URI=mongodb://seu-servidor/maninews
-JWT_SECRET=jwt_secret_super_seguro
-SESSION_SECRET=session_secret_super_seguro
+MONGODB_URI=mongodb://usuario:senha@host:27017/maninews
+JWT_SECRET=jwt_secret_super_seguro_aqui
+SESSION_SECRET=session_secret_super_seguro_aqui
+PORT=3000
 ```
 
-### PM2 (Recomendado)
+### PM2 (Recomendado para VPS)
 ```bash
 npm install -g pm2
 pm2 start app.js --name maninews
@@ -196,16 +203,35 @@ pm2 startup
 pm2 save
 ```
 
-### Docker (Opcional)
-```dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --production
-COPY . .
-EXPOSE 3000
-CMD ["npm", "start"]
+### Docker
+```bash
+# Build da imagem
+docker build -t maninews .
+
+# Executar container
+docker run -d \
+  -p 3000:3000 \
+  -e MONGODB_URI=mongodb://host:27017/maninews \
+  -e NODE_ENV=production \
+  --name maninews \
+  maninews
 ```
+
+### Troubleshooting Deploy
+
+**Erro: "No buildpack groups passed detection"**
+- Verifique se o `package.json` está na raiz
+- Confirme que o `Procfile` existe
+- Verifique se as engines estão especificadas
+
+**Erro de conexão MongoDB**
+- O app inicia mesmo sem DB para health checks
+- Verifique a string de conexão `MONGODB_URI`
+- Confirme que o MongoDB está acessível
+
+**Timeout no build**
+- Remova `node_modules` antes do deploy
+- Use `.dockerignore` ou `.slugignore` adequados
 
 ## 📱 PWA Features
 

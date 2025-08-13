@@ -1,0 +1,44 @@
+{
+  "name": "maninews",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "start": "node app.js",
+    "build-css": "tailwindcss -i ./public/css/input.css -o ./public/css/output.css --watch",
+    "build-css-prod": "tailwindcss -i ./public/css/input.css -o ./public/css/output.css --minify",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Portal de notícias moderno e responsivo - PWA",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "dependencies": {
+    "@tailwindcss/typography": "^0.5.16",
+    "bcrypt": "^6.0.0",
+    "compression": "^1.8.1",
+    "connect-mongo": "^5.1.0",
+    "dotenv": "^17.2.1",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
+    "express-session": "^1.18.2",
+    "express-validator": "^7.2.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.17.1",
+    "node-cron": "^4.2.1",
+    "sharp": "^0.34.3",
+    "socket.io": "^4.8.1",
+    "tailwindcss": "^4.1.11",
+    "winston": "^3.17.0",
+    "workbox-webpack-plugin": "^7.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}

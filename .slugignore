@@ -1,0 +1,21 @@
+# Ignore these files during slug compilation
+logs/
+*.log
+coverage/
+.nyc_output/
+node_modules/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+README.md
+.git/
+.gitignore
+Dockerfile
+.dockerignore
+docker-compose.yml

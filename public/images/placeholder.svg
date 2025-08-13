@@ -1,0 +1,6 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#F3F4F6"/>
+  <path d="M120 120L200 180L280 120L320 160V240H80V160L120 120Z" fill="#D1D5DB"/>
+  <circle cx="140" cy="140" r="20" fill="#D1D5DB"/>
+  <text x="200" y="270" text-anchor="middle" fill="#6B7280" font-family="Arial, sans-serif" font-size="14">Mani News</text>
+</svg>

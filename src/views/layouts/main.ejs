@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <!-- Primary Meta Tags -->
+    <title><%= typeof metaTitle !== 'undefined' ? metaTitle : title %> | <%= APP_NAME %></title>
+    <meta name="title" content="<%= typeof metaTitle !== 'undefined' ? metaTitle : title %> | <%= APP_NAME %>">
+    <meta name="description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : 'Portal de notícias moderno e atualizado' %>">
+    <meta name="keywords" content="notícias, brasil, mundo, política, economia, esportes, tecnologia">
+    <meta name="author" content="<%= APP_NAME %>">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<%= `${req.protocol}://${req.get('host')}${req.originalUrl}` %>">
+    <meta property="og:title" content="<%= typeof metaTitle !== 'undefined' ? metaTitle : title %> | <%= APP_NAME %>">
+    <meta property="og:description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : 'Portal de notícias moderno e atualizado' %>">
+    <meta property="og:image" content="<%= `${req.protocol}://${req.get('host')}/images/og-image.jpg` %>">
+    <meta property="og:site_name" content="<%= APP_NAME %>">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="<%= `${req.protocol}://${req.get('host')}${req.originalUrl}` %>">
+    <meta property="twitter:title" content="<%= typeof metaTitle !== 'undefined' ? metaTitle : title %> | <%= APP_NAME %>">
+    <meta property="twitter:description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : 'Portal de notícias moderno e atualizado' %>">
+    <meta property="twitter:image" content="<%= `${req.protocol}://${req.get('host')}/images/og-image.jpg` %>">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1e40af">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="<%= APP_NAME %>">
+    
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="shortcut icon" href="/icons/favicon.ico">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/output.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "NewsMediaOrganization",
+        "name": "<%= APP_NAME %>",
+        "url": "<%= `${req.protocol}://${req.get('host')}` %>",
+        "logo": "<%= `${req.protocol}://${req.get('host')}/images/logo.png` %>",
+        "sameAs": [
+            "https://twitter.com/maninews",
+            "https://facebook.com/maninews"
+        ]
+    }
+    </script>
+    
+    <!-- Critical CSS inline for above-the-fold -->
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        }
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="min-h-full bg-gray-50 font-sans antialiased">
+    <!-- Skip to content for accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 bg-primary-600 text-white p-2 z-50">
+        Pular para o conteúdo principal
+    </a>
+    
+    <!-- Header -->
+    <%- include('../partials/header') %>
+    
+    <!-- Main Content -->
+    <main id="main-content" class="flex-1">
+        <%- include('../pages/' + (page || 'home')) %>
+    </main>
+    
+    <!-- Footer -->
+    <%- include('../partials/footer') %>
+    
+    <!-- Install PWA Banner -->
+    <div id="installBanner" class="hidden fixed bottom-4 left-4 right-4 bg-primary-600 text-white p-4 rounded-lg shadow-lg z-50 md:left-auto md:right-4 md:w-80">
+        <div class="flex items-center justify-between">
+            <div class="flex-1">
+                <h3 class="font-semibold text-sm">Instalar <%= APP_NAME %></h3>
+                <p class="text-xs opacity-90">Adicione à sua tela inicial para acesso rápido</p>
+            </div>
+            <div class="flex gap-2 ml-3">
+                <button id="installBtn" class="btn-secondary text-xs px-3 py-1">Instalar</button>
+                <button id="dismissBtn" class="text-white/70 hover:text-white">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 shadow-xl">
+            <div class="flex items-center space-x-3">
+                <div class="loading-spinner"></div>
+                <span class="text-gray-700">Carregando...</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="/js/main.js" defer></script>
+    <script src="/sw.js" defer></script>
+    
+    <!-- Analytics placeholder -->
+    <% if (typeof GOOGLE_ANALYTICS_ID !== 'undefined' && GOOGLE_ANALYTICS_ID) { %>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<%= GOOGLE_ANALYTICS_ID %>"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '<%= GOOGLE_ANALYTICS_ID %>');
+    </script>
+    <% } %>
+</body>
+</html>
